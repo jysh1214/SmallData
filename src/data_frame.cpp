@@ -1,7 +1,9 @@
 #include "data_frame.h"
+#include "vis.h"
 #include <iostream>
 
 using namespace sd;
+using namespace std;
 
 DataFrame::DataFrame()
 {
@@ -49,18 +51,18 @@ void DataFrame::addHeaders(std::vector<std::string>& headers)
             ++i;
         }
     }
-    catch (const std::exception& e) {
-        std::cerr << e.what() << std::endl;
+    catch (const exception& e) {
+        cerr << e.what() << endl;
     }
 }
 
-void DataFrame::addRow(std::vector<std::string>& row)
+void DataFrame::addRow(vector<string>& row)
 {
     try {
         this->rowVec.push_back(Row(row));
     }
-    catch (const std::exception& e) {
-        std::cerr << e.what() << std::endl;
+    catch (const exception& e) {
+        cerr << e.what() << endl;
     }
 }
 
@@ -69,8 +71,8 @@ void DataFrame::addRow(Row& row)
     try {
         this->rowVec.push_back(row);
     }
-    catch (const std::exception& e) {
-        std::cerr << e.what() << std::endl;
+    catch (const exception& e) {
+        cerr << e.what() << endl;
     }
 }
 
@@ -84,12 +86,12 @@ size_t DataFrame::getColSize()
     return this->headersVec.size();
 }
 
-std::vector<std::string>& DataFrame::getHeaders()
+std::vector<string>& DataFrame::getHeaders()
 {
     return this->headersVec;
 }
 
-size_t DataFrame::getHeaderValue(const std::string header)
+size_t DataFrame::getHeaderValue(const string header)
 {
     return this->headersMap[header];
 }
@@ -105,10 +107,10 @@ Row& DataFrame::getRow(size_t i)
 }
 
 template <>
-void DataFrame::sortBy<std::string>(const std::string header, const char op)
+void DataFrame::sortBy<std::string>(const string header, const char op)
 {
     if (op != '<' && op != '>') {
-        std::cerr << "DataFrame::sortBy Error: Use '<' or '>'.\n";
+        cerr << "DataFrame::sortBy Error: Use '<' or '>'.\n";
         exit(0);
     }
 
@@ -129,7 +131,7 @@ template <>
 void DataFrame::sortBy<int>(const std::string header, const char op)
 {
     if (op != '<' && op != '>') {
-        std::cerr << "DataFrame::sortBy Error: Use '<' or '>'.\n";
+        cerr << "DataFrame::sortBy Error: Use '<' or '>'.\n";
         exit(0);
     }
 
@@ -150,7 +152,7 @@ template <>
 void DataFrame::sortBy<float>(const std::string header, const char op)
 {
     if (op != '<' && op != '>') {
-        std::cerr << "DataFrame::sortBy Error: Use '<' or '>'.\n";
+        cerr << "DataFrame::sortBy Error: Use '<' or '>'.\n";
         exit(0);
     }
 
@@ -171,7 +173,7 @@ template <>
 void DataFrame::sortBy<double>(const std::string header, const char op)
 {
     if (op != '<' && op != '>') {
-        std::cerr << "DataFrame::sortBy Error: Use '<' or '>'.\n";
+        cerr << "DataFrame::sortBy Error: Use '<' or '>'.\n";
         exit(0);
     }
 
@@ -192,7 +194,7 @@ template <>
 void DataFrame::sortBy<long>(const std::string header, const char op)
 {
     if (op != '<' && op != '>') {
-        std::cerr << "DataFrame::sortBy Error: Please use '<' or '>'.\n";
+        cerr << "DataFrame::sortBy Error: Please use '<' or '>'.\n";
         exit(0);
     }
 
@@ -220,34 +222,34 @@ inline bool exist(std::string str, std::vector<std::string>& vec)
 }
 
 template <>
-std::string DataFrame::getMax<std::string>(const std::string header)
+std::string DataFrame::getMax<string>(const string header)
 {
     if (!exist(header, this->headersVec)) {
-        std::cerr << "cs::DataFrame::getMax Error: Header does not exist.\n";
+        cerr << "cs::DataFrame::getMax Error: Header does not exist.\n";
         exit(0);
     }
 
     size_t headerValue = this->headersMap[header];
-    std::string max = this->rowVec[0][headerValue];
-    for (auto row : this->rowVec) {
-        max = row[headerValue] >= max ? row[headerValue] : max;
+    string max = this->rowVec[0][headerValue];
+    for (auto row: this->rowVec) {
+        max = (row[headerValue] >= max)? row[headerValue]: max;
     }
 
     return max;
 }
 
 template <>
-int DataFrame::getMax<int>(const std::string header)
+int DataFrame::getMax<int>(const string header)
 {
     if (!exist(header, this->headersVec)) {
-        std::cerr << "cs::DataFrame::getMax Error: Header does not exist.\n";
+        cerr << "cs::DataFrame::getMax Error: Header does not exist.\n";
         exit(0);
     }
 
     size_t headerValue = this->headersMap[header];
     int max = stoi(this->rowVec[0][headerValue]);
     for (auto row : this->rowVec) {
-        max = stoi(row[headerValue]) >= max ? stoi(row[headerValue]) : max;
+        max = (stoi(row[headerValue]) >= max)? stoi(row[headerValue]): max;
     }
 
     return max;
@@ -257,38 +259,38 @@ template <>
 float DataFrame::getMax<float>(const std::string header)
 {
     if (!exist(header, this->headersVec)) {
-        std::cerr << "cs::DataFrame::getMax Error: Header does not exist.\n";
+        cerr << "cs::DataFrame::getMax Error: Header does not exist.\n";
         exit(0);
     }
 
     size_t headerValue = this->headersMap[header];
     float max = stof(this->rowVec[0][headerValue]);
     for (auto row : this->rowVec) {
-        max = stof(row[headerValue]) >= max ? stof(row[headerValue]) : max;
+        max = (stof(row[headerValue]) >= max)? stof(row[headerValue]): max;
     }
 
     return max;
 }
 
 template <>
-double DataFrame::getMax<double>(const std::string header)
+double DataFrame::getMax<double>(const string header)
 {
     if (!exist(header, this->headersVec)) {
-        std::cerr << "cs::DataFrame::getMax Error: Header does not exist.\n";
+        cerr << "cs::DataFrame::getMax Error: Header does not exist.\n";
         exit(0);
     }
 
     size_t headerValue = this->headersMap[header];
     double max = stod(this->rowVec[0][headerValue]);
     for (auto row : this->rowVec) {
-        max = stod(row[headerValue]) >= max ? stod(row[headerValue]) : max;
+        max = (stod(row[headerValue]) >= max)? stod(row[headerValue]): max;
     }
 
     return max;
 }
 
 template <>
-long DataFrame::getMax<long>(const std::string header)
+long DataFrame::getMax<long>(const string header)
 {
     if (!exist(header, this->headersVec)) {
         std::cerr << "cs::DataFrame::getMax Error: Header does not exist.\n";
@@ -298,14 +300,14 @@ long DataFrame::getMax<long>(const std::string header)
     size_t headerValue = this->headersMap[header];
     long max = stol(this->rowVec[0][headerValue]);
     for (auto row : this->rowVec) {
-        max = stol(row[headerValue]) >= max ? stol(row[headerValue]) : max;
+        max = (stol(row[headerValue]) >= max)? stol(row[headerValue]): max;
     }
 
     return max;
 }
 
 template <>
-std::string DataFrame::getMin<std::string>(const std::string header)
+std::string DataFrame::getMin<string>(const string header)
 {
     if (!exist(header, this->headersVec)) {
         std::cerr << "cs::DataFrame::getMin Error: Header does not exist.\n";
@@ -570,21 +572,21 @@ DataFrame DataFrame::selectCol(const std::initializer_list<std::string>& list)
 
     return new_df;
 }
-/*
+
 void DataFrame::show()
 {
-    size_t size = (10 > this->rowVector.size()) ? this->rowVector.size() : 10;
+    size_t size = (10 > this->rowVec.size()) ? this->rowVec.size() : 10;
 
-    Visualization vis(this->headersVector, this->rowVector, size);
+    Vis vis(this->headersVec, this->rowVec, size);
     vis.showTable();
 }
 
 void DataFrame::show(size_t size)
 {
-    assert((size <= this->rowVector.size()) &&
+    assert((size <= this->rowVec.size()) &&
            "cs::DataFrame::show Error: Input size must <= dataframe size.\n");
 
-    Visualization vis(this->headersVector, this->rowVector, size);
+    Vis vis(this->headersVec, this->rowVec, size);
     vis.showTable();
 }
 
@@ -592,10 +594,9 @@ void DataFrame::resetHeadersMap()
 {
     this->headersMap.clear();
     size_t i = 0;
-    for (auto header : this->headersVector)
+    for (auto header: this->headersVec)
     {
         this->headersMap[header] = i;
         ++i;
     }
 }
-*/

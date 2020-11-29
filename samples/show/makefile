@@ -4,12 +4,13 @@ OBJ = obj
 SRC = ../../src
 INCLUDE = ../../include
 
-all: dirs ./show
+all: dirs show
 
-./show: main.cpp \
+show: main.cpp \
 	$(OBJ)/data_frame.o \
 	$(OBJ)/parser.o \
-	$(OBJ)/row.o
+	$(OBJ)/row.o \
+	$(OBJ)/vis.o
 	clang++ -Wall -std=c++17 $^ -o $@ -I$(INCLUDE)
 
 $(OBJ)/data_frame.o: $(SRC)/data_frame.cpp
@@ -21,11 +22,14 @@ $(OBJ)/parser.o: $(SRC)/parser.cpp
 $(OBJ)/row.o: $(SRC)/row.cpp
 	clang++ -Wall -std=c++17 -c $< -o $@
 
+$(OBJ)/vis.o: $(SRC)/vis.cpp
+	clang++ -Wall -std=c++17 -c $< -o $@
+
 dirs:
 	mkdir -p $(OBJ)
 
 clean:
-	rm -rf $(OBJ) ./show
+	rm -rf $(OBJ) show
 
 state:
 	wc $(SRC)/*

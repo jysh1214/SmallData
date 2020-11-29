@@ -2,18 +2,19 @@
 #include <iostream>
 
 using namespace sd;
+using namespace std;
 
-Row::Row(std::vector<std::string>& row): db_row(row)
+Row::Row(vector<string>& row): db_row(row)
 {
 
 }
 
-Row::Row(std::vector<std::string>&& row): db_row(row)
+Row::Row(vector<string>&& row): db_row(row)
 {
 
 }
 
-std::string& Row::operator[](size_t i)
+string& Row::operator[](size_t i)
 {
     return this->db_row[i];
 }
@@ -23,7 +24,7 @@ size_t Row::size()
     return db_row.size();
 }
 
-void Row::push_back(std::string str)
+void Row::push_back(string str)
 {
     db_row.push_back(str);
 }

@@ -4,22 +4,24 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
 namespace sd
 {
 
-struct Row: public std::vector<std::string>
+struct Row: public vector<string>
 {
 public:
-    Row(std::vector<std::string>&);
-    Row(std::vector<std::string>&&);
-    std::string& operator[](size_t);
+    Row(vector<string>&);
+    Row(vector<string>&&);
+    string& operator[](size_t);
     size_t size();
-    void push_back(std::string);
+    void push_back(string);
     void print(size_t);
     void erase(size_t);
 
 private:
-    std::vector<std::string> db_row;
+    vector<string> db_row;
 };
 
 } // namespace sd

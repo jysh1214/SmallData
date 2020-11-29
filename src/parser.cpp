@@ -4,13 +4,16 @@
 #include <iostream>
 
 using namespace sd;
+using namespace std;
+
+size_t COL_SIZE = 0;
 
 cvs_helper::cvs_helper()
 {
 
 }
 
-cvs_helper::cvs_helper(std::string str): content(str)
+cvs_helper::cvs_helper(string str): content(str)
 {
 
 }
@@ -41,9 +44,9 @@ cvs_helper& cvs_helper::withDefaultHeaders()
     return *this;
 }
 
-cvs_helper& cvs_helper::withHeaders(std::initializer_list<std::string> list)
+cvs_helper& cvs_helper::withHeaders(initializer_list<string> list)
 {
-    for (std::string header: list) {
+    for (string header: list) {
         this->customizedHeaders.push_back(header);
     }
     this->useDefaultHeaders = false;
@@ -67,28 +70,39 @@ DataFrame cvs_helper::createDF()
     // customized headers
     if (!this->useDefaultHeaders) {
         df.addHeaders(this->customizedHeaders);
+        COL_SIZE = this->customizedHeaders.size();
     }
     int current_point = 0;
-    std::vector<std::string> row;
-    for (std::string::size_type i = 0; i <= this->content.size(); ++i) {
-        if (content[i] == this->split || content[i] == '\n' || i == content.size() - 1) {
-            std::string item = content.substr(current_point, i - current_point);
-            current_point = i + 1;
-            if (!item.empty()) {
+    vector<string> row;
+    string::size_type it = 0;
+    string item;
+    for (; it <= this->content.size(); ++it) {
+        if (content[it] == this->split || it == content.size() - 1) {
+            item = content.substr(current_point, it - current_point);
+            current_point = it + 1;
+            row.push_back(item);
+        }
+        else if (content[it] == '\n' && COL_SIZE > 0) {
+            if (row.size() == COL_SIZE - 1) {
+                item = content.substr(current_point, it - current_point);
+                current_point = it + 1;
                 row.push_back(item);
             }
         }
         // get headers in first line
-        if (this->useDefaultHeaders && content[i] == '\n') {
+        if (this->useDefaultHeaders && content[it] == '\n') {
+            item = content.substr(current_point, it - current_point);
+            current_point = it + 1;
+            row.push_back(item);
+
             df.addHeaders(row);
+            COL_SIZE = row.size();
             row.clear();
             this->useDefaultHeaders = false;
         }
-        if (content[i] == '\n' || i == content.size()) {
-            if (row.size() > 0) {
-                df.addRow(row);
-                row.clear();
-            }
+        if ((content[it] == '\n' && row.size() == COL_SIZE) || it == content.size()) {
+            df.addRow(row);
+            row.clear();
         }
     } // read whole cvs file
 
@@ -107,15 +121,14 @@ Parser::~Parser()
 
 cvs_helper Parser::readCVS(const char* filePath)
 {
-    std::string fileName(filePath);
+    string fileName(filePath);
     if (fileName.substr(fileName.size() - 4, 4) != ".csv") {
         std::cerr << "Warning: ";
         std::cerr << filePath;
         std::cerr << " is not a cvs file.\n";
     }
-    std::ifstream cvsFile(filePath);
-    std::string content((std::istreambuf_iterator<char>(cvsFile)),
-        std::istreambuf_iterator<char>());
+    ifstream cvsFile(filePath);
+    string content((istreambuf_iterator<char>(cvsFile)), istreambuf_iterator<char>());
     cvsFile.close();
 
     return cvs_helper(content);
